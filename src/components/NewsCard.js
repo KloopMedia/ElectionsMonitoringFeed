@@ -21,8 +21,10 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 345,
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
+    // height: 0,
+    // paddingTop: '56.25%', // 16:9
+    height: "100%",
+    //paddingTop: '56.25%', // 16:9
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -44,6 +46,9 @@ export default function NewsCard(props) {
   //console.log(props.news)
   let isImage = false
   let isVideo = false
+
+  console.log('FILES DEBUG')
+  console.log(props.news)
 
   //console.log(props.news.fileInfo)
   if (Object.keys(props.news.fileInfo).length > 0){

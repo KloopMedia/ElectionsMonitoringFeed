@@ -3,6 +3,9 @@ import News from './components/News'
 
 import firebase from './firebase';
 import matchTitle from './utils/titleMathcing'
+import TopPanel from './components/TopPanel'
+
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const db = firebase.firestore()
 
@@ -11,10 +14,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};   
+    this.state = {showSpinner: true};   
 
     this.jsonForms = {}
-    this.news = {}
+    this.news = {}    
   }    
 
   //Костыль чтобы не делать мульон запросов!
@@ -55,10 +58,16 @@ class App extends React.Component {
     //Если файл
     if(feedData.hasOwnProperty('fileId')){
 
+      if (feedData['filename'] === null || feedData['filename'] === undefined ){
+        console.log('ERROR: NO FILENAME')
+        return
+      }
+
       //console.log(feedData)
       //TODO
       report['title'] = 'Нарушения на участке: ?'
       report['date'] = new Date(feedData['date'].seconds*1000).toString();
+      report['timestamp'] = feedData['date'].seconds
 
       fileInfo['public_url'] = feedData['public_url']
       fileInfo['filename'] = feedData['filename']
@@ -77,16 +86,19 @@ class App extends React.Component {
 
       this.news[feedData['fileId']] = report   
 
+      console.log('FILENAME')
+      console.log(feedData['filename'] )
+
     //Если форма
     } else {
 
       //TODO
       report['title'] = 'Нарушения на участке: ?'
       report['date'] = new Date(feedData['timestamp'].seconds*1000).toString();
+      report['timestamp'] = feedData['timestamp'].seconds
 
       Object.entries(feedData['answers']).forEach(([keyAnswer, answer]) => {
 
-        console.log(answer)
         if (answer === null || answer === undefined ){
           console.log('ERROR')
           return
@@ -113,8 +125,11 @@ class App extends React.Component {
             let generatedAnswer = subquestions[keyQ]['q'] + ' ответ: ' + answers[answerQ]
             violation.push(generatedAnswer)
             
-            //Выводить только если отличается от вопроса по умолчанию?
-            // if(answerQ.toString() != subquestions[keyQ]['no'])
+            // console.log("CHECK")
+            // console.log(typeof(answerQ.toString()))
+            // console.log(typeof(subquestions[keyQ]['on']))
+            // //Выводить только если отличается от вопроса по умолчанию?
+            // if(answerQ.toString() == subquestions[keyQ]['on'])
             // {
             //   let generatedAnswer = subquestions[keyQ]['q'] + ' ответ: ' + answers[answerQ]
             //   violation.push(generatedAnswer)
@@ -163,7 +178,7 @@ class App extends React.Component {
     }    
   }
 
-  componentDidMount() {   
+  componentDidMount() {      
     
     this.loadJsonForms()
 
@@ -198,8 +213,26 @@ class App extends React.Component {
           news: this.news
         });
       }    
+
+      this.setState({showSpinner: false})
     })   
   }  
+
+  returnSpinner = () => {
+    return (
+    <div style = {{
+      position: 'absolute',
+      height: '100px',
+      width: '100px',
+      top: '50%',
+      left: '50%',
+      marginLeft: '-50px',
+      marginTop: '-50px',
+      }}>
+      <CircularProgress size={100} style={{color: 'grey'}}/>
+    </div>
+    )
+  }
   
   render () {
 
@@ -210,6 +243,8 @@ class App extends React.Component {
 
     return (
    <div>     
+     <TopPanel></TopPanel>
+     {this.state.showSpinner ? this.returnSpinner() : <div></div>}
      {isAllowedRender
         ? <News news={this.state.news}></News>
         : <div></div>
