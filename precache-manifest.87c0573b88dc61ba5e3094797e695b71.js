@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8e080afea9083d5bb07a63ff0c750d55",
+    "revision": "8e688bb013118241b2151094fdde2983",
     "url": "/ElectionsMonitoringFeed/index.html"
   },
   {
-    "revision": "d40b85d268cf9683ef94",
+    "revision": "0646da3f5c61e10e514f",
     "url": "/ElectionsMonitoringFeed/static/css/main.5ecd60fb.chunk.css"
   },
   {
-    "revision": "faff4690f6690901c8c3",
-    "url": "/ElectionsMonitoringFeed/static/js/2.3f540431.chunk.js"
+    "revision": "933ac7fee04247bb8478",
+    "url": "/ElectionsMonitoringFeed/static/js/2.25881b96.chunk.js"
   },
   {
     "revision": "5f8be6edcb631ea3c834b8459dc2c264",
-    "url": "/ElectionsMonitoringFeed/static/js/2.3f540431.chunk.js.LICENSE.txt"
+    "url": "/ElectionsMonitoringFeed/static/js/2.25881b96.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d40b85d268cf9683ef94",
-    "url": "/ElectionsMonitoringFeed/static/js/main.d3c254c2.chunk.js"
+    "revision": "0646da3f5c61e10e514f",
+    "url": "/ElectionsMonitoringFeed/static/js/main.17f4793c.chunk.js"
   },
   {
     "revision": "ae4deda12519688e58fc",
