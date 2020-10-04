@@ -1,5 +1,5 @@
 import React from 'react'
-import NewsCard from './NewsCard'
+import PaginatedNews from './PaginatedNews'
 
 import Grid from "@material-ui/core/Grid";
 
@@ -231,30 +231,7 @@ const News = (props) => {
         //     sortedNews.map(news => (
         //         <NewsCard news={news[1]}></NewsCard>
         // ))
-        <Grid
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justify="center"
-            style={{ minHeight: '100vh' }}
-            >
-
-            <Grid item xs={12}>
-                <Grid container justify="center" direction='column' spacing={1}>
-                {                
-                    sortedNews.map(news => (
-                        <Grid item>
-                            <NewsCard news={news[1]}></NewsCard>
-                        </Grid>                        
-                ))}
-                {/* {Object.keys(props.news).map(news => (
-                    <NewsCard news={props.news[news]}></NewsCard>
-                ))} */}
-                  </Grid> 
-            </Grid>   
-
-        </Grid> 
+        <PaginatedNews data={sortedNews} />
         
     )
 }
