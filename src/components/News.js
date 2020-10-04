@@ -33,10 +33,6 @@ const News = (props) => {
 
     let sortedNews = sortProperties(props.news, 'timestamp', true, true)
 
-    console.log(props)
-    console.log('SORTED')
-    console.log(sortedNews)
-
     //FILTERING
 
     //violations
@@ -44,9 +40,9 @@ const News = (props) => {
         if(props.filters.filterViolation != 'Любое нарушение'){
             
             let show = false
-            console.log("DEBUG")
+
             el[1].description.map(description => {
-                console.log(props.filters.filterViolation)
+
                 if ((description == props.filters.filterViolation) || 
                     (description == props.filters.filterViolation + ' (см. фото)') || 
                     (description == props.filters.filterViolation + ' (см. видео)')
@@ -66,6 +62,16 @@ const News = (props) => {
     sortedNews = sortedNews.filter(function (el) {
         if(props.filters.searchPoolingStation != 0){
             return el[1].pollingStation == props.filters.searchPoolingStation.toString();
+        } 
+        else{
+            return true
+        }        
+    });
+
+     //searchDistrict
+     sortedNews = sortedNews.filter(function (el) {
+        if(props.filters.searchDistrict != ''){
+            return el[1].district == props.filters.searchDistrict;
         } 
         else{
             return true
@@ -220,8 +226,6 @@ const News = (props) => {
     sortedNews = sortedNews.filter(function (el) {
         return !el[1].dontShow
     }); 
-
-    console.log(sortedNews)
 
     return (        
         //     sortedNews.map(news => (

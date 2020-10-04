@@ -23,6 +23,8 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 
 import violationsList from './utils/violationsList'
 
+import TopPoolingStations from './components/TopPoolingStations'
+
 const db = firebase.firestore()
 
 class App extends React.Component {
@@ -43,10 +45,11 @@ class App extends React.Component {
         switchExit : true,
         switchHome : true,
         switchText : true,
-        switchImage : false,
-        switchVideo : false,
+        switchImage : true,
+        switchVideo : true,
         
         searchPoolingStation : 0,
+        searchDistrict : '',
 
         filterViolation : 'Любое нарушение'
       },
@@ -60,8 +63,8 @@ class App extends React.Component {
       switchExit : true,
       switchHome : true,
       switchText : true,
-      switchImage : false,
-      switchVideo : false,
+      switchImage : true,
+      switchVideo : true,
 
       filterViolation : 'Любое нарушение',
 
@@ -72,18 +75,8 @@ class App extends React.Component {
     this.jsonForms = {}
     this.news = {}   
     this.searchPoolingStation = 0 
-    this.violationList = []
-
-    // this.switchEmergency = true
-    // this.switchMobile = true
-    // this.switchMorning = true
-    // this.switchAfternoon = true
-    // this.switchEvening = true
-    // this.switchEnter = true
-    // this.switchExit = true
-    // this.switchHome = true
-    // this.switchImage = true
-    // this.switchVideo = true       
+    this.searchDistrict = 0
+    this.violationList = []  
   }    
 
   //Костыль чтобы не делать мульон запросов!
@@ -111,8 +104,6 @@ class App extends React.Component {
         console.error(error)
       })          
     })
-
-    //console.log(this.jsonForms)
   }
 
   generateListOfFilterViolations = () => {
@@ -127,7 +118,7 @@ class App extends React.Component {
 
   generateNewsData = (feedData, formData) => {   
     
-    console.log(feedData)
+    //console.log(feedData)
 
     let report = {}
     let violations = []
@@ -144,13 +135,7 @@ class App extends React.Component {
 
         return
       }
-      // else{
-      //   console.log('FEED')
-      //   console.log(feedData)
-      // }
 
-      //console.log(feedData)
-      //TODO
       report['title'] = feedData['district']
       report['date'] = new Date(feedData['date'].seconds*1000).toString();
       report['timestamp'] = feedData['date'].seconds
@@ -402,6 +387,10 @@ class App extends React.Component {
     this.searchPoolingStation = event.target.value
   }
 
+  handleChangeDistrict = (event) => { 
+    this.searchDistrict = event.target.value
+  }
+
   handleClickClearPoolingStation = (event) => {
     this.setState({searchPoolingStation: 0})    
   }
@@ -427,6 +416,7 @@ class App extends React.Component {
       switchVideo : this.state.switchVideo,
       
       searchPoolingStation : this.searchPoolingStation, 
+      searchDistrict : this.searchDistrict, 
 
       filterViolation : this.state.filterViolation
     }
@@ -458,9 +448,6 @@ class App extends React.Component {
     if(this.state.news === undefined) {
       isAllowedRender = false
     }   
-
-    console.log(this.state.searchPoolingStation)
-    console.log(isAllowedRender)
 
     return (
    <div>     
@@ -592,11 +579,18 @@ class App extends React.Component {
           />
         </FormGroup>
       </Grid>
+
+      <Grid container justify = "center">
+        <TopPoolingStations 
+          news={this.state.news}>
+        </TopPoolingStations>
+      </Grid>      
       
       <Grid container justify = "center">
         <TextField 
           style={{width:'350px'}}
-          id="outlined-basic" 
+          type='number'
+          id="outlined-station" 
           label="№ участка" 
           variant="outlined" 
           onChange={this.handleChangePoolingStation}
@@ -611,6 +605,16 @@ class App extends React.Component {
         >
           
         </Button>           */}
+      </Grid>
+
+      <Grid container justify = "center">
+        <TextField 
+          style={{width:'350px'}}
+          id="outlined-district" 
+          label="Район" 
+          variant="outlined" 
+          onChange={this.handleChangeDistrict}
+        />
       </Grid>
 
       <Grid container justify = "center">
