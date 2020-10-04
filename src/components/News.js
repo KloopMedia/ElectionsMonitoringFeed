@@ -231,7 +231,9 @@ const News = (props) => {
         //     sortedNews.map(news => (
         //         <NewsCard news={news[1]}></NewsCard>
         // ))
-        <PaginatedNews data={sortedNews} />
+        <Grid container justify = "center">
+            <PaginatedNews data={sortedNews} />
+        </Grid>
         
     )
 }

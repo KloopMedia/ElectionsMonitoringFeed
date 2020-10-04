@@ -40,6 +40,7 @@ class TopPoolingStations extends React.Component {
         }
 
         this.chartData = {}
+        this.districts = {}
     } 
 
     sortProperties = (obj, sortedBy, isNumericSort, reverse) => {
@@ -71,7 +72,20 @@ class TopPoolingStations extends React.Component {
     generateChartData = () => {
 
         let chartData = {}
-        console.log(this.props)
+        let districts = {
+            '': '',
+            'нет данных' :''
+        }
+        //console.log(this.props)
+
+        Object.entries(this.props.news).forEach(([key, data]) => {
+            if(data.pollingStation === null || data.pollingStation === undefined || data.pollingStation === 'none'){
+                districts['нет данных'] = ''
+            }else{
+                districts[data.pollingStation] = data.district
+            }
+            
+        });
 
         Object.entries(this.props.news).forEach(([key, data]) => {
             //console.log(key)
@@ -80,12 +94,23 @@ class TopPoolingStations extends React.Component {
             let isForm = true
             if(Object.keys(data.fileInfo).length > 0){
                 isForm = false
-                console.log('NOT FORM')
+
+                if(data.formEnter || data.formExit || data.formHome){
+                    //console.log('NOT IMPORTANT')
+                    isForm = false
+                }
+                //console.log('NOT FORM')
+            }else{
+                if(data.formEnter || data.formExit || data.formHome){
+                    //console.log('NOT IMPORTANT')
+                    isForm = false
+                }
+                //console.log('NOT FORM')
             }
 
             if(isForm) {
 
-                if(data.pollingStation === null || data.pollingStation === undefined ){
+                if(data.pollingStation === null || data.pollingStation === undefined || data.pollingStation === 'none'){
                     if(chartData.hasOwnProperty('нет данных')){
                         if (data.violations.length == 0){ 
                             chartData['нет данных'] += data.description.length
@@ -118,8 +143,10 @@ class TopPoolingStations extends React.Component {
         });
 
         this.chartData = chartData
+        this.districts = districts
         console.log("CHART CALC")
         console.log(chartData)
+        console.log(districts)
     }
 
   render() {
@@ -129,7 +156,11 @@ class TopPoolingStations extends React.Component {
     let chartData = {}
 
     Object.entries(this.chartData).forEach(([x, y]) => {
-        chartData[x] = {'x': x, 'y': y}        
+        if(x==''){
+            chartData[x] = {'x': "NO INFO", 'y': y, 'd':''} 
+        }else{
+            chartData[x] = {'x': x, 'y': y, 'd': this.districts[x]}    
+        }            
     });
 
     console.log('LAST')
@@ -139,7 +170,7 @@ class TopPoolingStations extends React.Component {
 
     let greenData = []
 
-    sortedData.slice(0, 5).map(bar => (
+    sortedData.slice(0, 10).map(bar => (
         greenData.push(bar[1])
     ))
 
@@ -156,13 +187,14 @@ class TopPoolingStations extends React.Component {
     return (
       <div>
           {!emptyData
-          ? <XYPlot xType="ordinal" width={350} height={200} xDistance={100}>
+          ? <XYPlot xType="ordinal" width={1000} height={200} xDistance={50}>
                 <VerticalGridLines />
                 <HorizontalGridLines />
                 <XAxis />
                 <YAxis />
                 <BarSeries className="vertical-bar-series-example" data={greenData} />
-                </XYPlot>
+                <LabelSeries labelAnchorX='middle' data={greenData} getLabel={d => d.d} />
+            </XYPlot>
           : <div></div>
         }        
       </div>
